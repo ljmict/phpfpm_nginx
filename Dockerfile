@@ -20,8 +20,9 @@ RUN yum install gcc pcre-devel openssl-devel zlib-devel -y && yum clean all \
     --with-threads \
     --with-file-aio \
     && make && make install && make clean
-WORKDIR /apps/nginx-${NGINX_VERSION}
+WORKDIR /var/www/html
 RUN rm -rf /tmp/nginx-${NGINX_VERSION} \
-    && ln -s /apps/nginx-${NGINX_VERSION}/sbin/nginx /usr/local/bin/nginx
+    && ln -s /apps/nginx-${NGINX_VERSION}/sbin/nginx /usr/local/bin/nginx \
+    && setfacl -Rm u:nginx:rwx /var/www/html
 EXPOSE 80/tcp
 ENTRYPOINT php-fpm && nginx -g "daemon off;"
